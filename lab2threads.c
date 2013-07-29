@@ -54,7 +54,6 @@ int main(int argc, char **argv)
 	for(send_counter=0;send_counter<P;++send_counter)
 	{
 		//create thread referring to pthread_create sample
-		//printf("WTF with P value %d\n", P);
 		send_arg[send_counter] = send_counter;
 		pthread_create(&(send_thread[send_counter]), NULL, &SendMessages, (void*)(&send_arg[send_counter]));
 	}
@@ -158,7 +157,7 @@ void* ReceiveMessages(void* arg)
 	while(1)
 	{
 		sleep(1);
-		//printf("waiting for this motherfucker\n");
+
 		sem_wait(&msg_count);
 		pthread_mutex_lock(&msg_mutex);
 		if(*msg_receive_pointer!=-1)
