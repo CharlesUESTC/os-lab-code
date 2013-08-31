@@ -42,23 +42,24 @@ int main (int argc, char **argv)
 		//failed to fork
 		printf("failed to fork\n");
 	}
-	else if(pID>0)
+	else if(pID > 0)
 	{
 		//code for parent process
 		printf("fork producer is running\n");
 		
 		pid_t producer_pID;		//declare a positive value to handle when P=1
 		int producerStatus;
+		
 		int producer_num;
 		for(producer_num = 0; producer_num<P; ++producer_num)
 		{
 			producer_pID = fork();
-			if(producer_pID <0)
+			if(producer_pID < 0)
 			{
 				printf("Error encountered forking multiple producers!\n");
 				exit(1);
 			}
-			else if(producer_pID ==0)
+			else if(producer_pID == 0)
 			{
 				//child producers
 				printf("Start producer %d\n",producer_num);
@@ -67,7 +68,7 @@ int main (int argc, char **argv)
 			}
 		}
 		
-		if(producer_pID>0)
+		if(producer_pID > 0)
 		{
 			//this is handling signal after sending and receiving all msgs
 			printf("Main producer signal handling\n");
@@ -167,11 +168,11 @@ short ParseArgs(int argc, char **argv)
 
   	if(N>B)
   	{
-    	return TRUE;
+		return TRUE;
   	}
   	else
   	{
-    	return FALSE;
+		return FALSE;
   	}
 }
 
@@ -183,25 +184,25 @@ int SendMessage(int producer_num)
 	struct msqid_ds buffer;	//message queue
 
 	while(1)
-    {	
+	{	
 		//access message queue information
 		sleep(1);
 		if (msgctl(msgqid, IPC_STAT, &buffer) == -1)
-    	{
-        	perror("msgctl IPC_STAT failed:");
+		{
+		perror("msgctl IPC_STAT failed:");
         	exit(EXIT_FAILURE);
-    	}
+		}
 		//printf("Number of messages in the queue: %lu\n", buffer.msg_qnum);
 		
 		//check if number of messages in the queue is reached B
 		if(buffer.msg_qnum<(unsigned long)B)
 		{
 			sprintf(str_msg,"%d", int_msg);
-		    message.m_type = T_TEXT; 
-		    message.m_sender = getpid(); 
-		    strcpy(message.m_data, str_msg);		//copy message from str_msg
+			message.m_type = T_TEXT; 
+			message.m_sender = getpid(); 
+			strcpy(message.m_data, str_msg);		//copy message from str_msg
 
-		    if (msgsnd(msgqid, (void *) &message, 10, 0 ) == -1)
+			if (msgsnd(msgqid, (void *) &message, 10, 0 ) == -1)
 		    {
 		        perror("msgsnd failed:");
 		        exit(EXIT_FAILURE);
